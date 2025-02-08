@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>AI Chatbot</h2>
+    <input type="text" id="question" placeholder="Ask a question...">
+    <button onclick="askQuestion()">Get Answer</button>
+    
+    <p id="response"></p>
+
+    <script>
+        function askQuestion() {
+            let question = document.getElementById("question").value;
+
+            if (!question.trim()) {
+                alert("Please enter a question!");
+                return;
+            }
+
+            fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question: question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerText = data.response || "Error: " + data.error;
+            })
+            .catch(error => {
+                document.getElementById("response").innerText = "An error occurred!";
+                console.error("Error:", error);
+            });
+        }
+    </script>
+
+</body>
+</html>
